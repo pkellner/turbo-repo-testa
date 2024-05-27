@@ -1,22 +1,46 @@
-name: Docker Image CI
+name: Build Web App
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: /turbo-repo-testa/my-turborepo/apps/web
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/web/node_modules
+            packages/shared/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build shared package
+        run: npm run build --workspace=packages/shared
+
+      - name: Build Web App
+        run: npm run build --workspace=apps/web
+
+      - name: Run tests
+        run: npm test --workspace=apps/web

@@ -19,5 +19,11 @@ RUN npm run build
 # Expose the port the app runs on
 EXPOSE 3000
 
+RUN ls
+
+WORKDIR /usr/src/app/app/web
+
+RUN ls
+
 # Define the command to run the app
 CMD ["npm", "start"]

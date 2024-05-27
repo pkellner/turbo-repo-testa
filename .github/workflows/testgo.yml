@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '18'
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -41,15 +41,15 @@ jobs:
       - name: Build shared package
         run: npm run build 
 
-      - name: Run step if any of the listed files above change    # UPDATE
+      - name: Push to ghcr.io
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
         run: |
-          RELEASEVERSION=1.11
+          RELEASEVERSION=1.12
           #
           echo "Docker testgo changed so building then pushing..."
           echo $GH_TOKEN | docker login ghcr.io -u $GH_USERNAME --password-stdin &
-          docker build . --file app/web/Dockerfile --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
+          docker build . --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
           docker push ghcr.io/pkellner/testgo --all-tags
           

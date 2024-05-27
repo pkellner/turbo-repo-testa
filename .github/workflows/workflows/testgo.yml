@@ -1,17 +1,16 @@
-name: gtoi-process-mail-queue-web
+name: testgo
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
     defaults:
       run:
-        working-directory: process-mail-queue-web   # UPDATE
-
+        working-directory: turbo-repo-testa/my-turborepo/apps/web
     name: docker build if docker file changed
     steps:
       - uses: actions/checkout@v3
@@ -33,20 +32,17 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:  # UPDATE
           files: |
-            .github/workflows/process-mail-queue-web.yml
+            .github/workflows/testgo.yml
 
       - name: Run step if any of the listed files above change    # UPDATE
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
-          DATABASE_URL_EXTERNAL: ${{secrets.DATABASE_URL_EXTERNAL}}
-          DATABASE_URL: ${{secrets.DATABASE_URL}}
-          RELEASEVERSION: "1.14A"
         run: |
-          RELEASEVERSION=1.11
+          RELEASEVERSION=1.00
           # RELEASEVERSION=$(cat version.txt)
-          # https://github.community/t/wanting-to-add-a-build-date-and-time-to-my-github-action/220185/6'
+          # https://github.community/t/wanting-to-add-ßa-build-date-and-time-to-my-github-action/220185/6'
           #
           RELEASEDATE1=$(date +"%m/%d/%YT%H:%M:%S%p")
           RELEASEDATE=$(TZ=":US/Pacific" date +%c)
@@ -66,11 +62,12 @@ jobs:
           echo "above is .env.production."
           #
           #
-          #          echo "emailsend@peterkellner.net mysqlsecure" | sudo tee -a /etc/hosts
+          #          echo "news-fairness@peterkellner.net mysqlsecure" | sudo tee -a /etc/hosts
           #          cat /etc/hosts
           #          echo "etc/hosts above should include mysqlsecure."
           #
+          echo "Docker testgo changed so building then pushing..."
           echo $GH_TOKEN | docker login ghcr.io -u $GH_USERNAME --password-stdin &
-          docker build --build-arg DATABASE_URL=$DATABASE_URL_EXTERNAL --build-arg GITHUB_ACTION=true . --file Dockerfile --tag ghcr.io/pkellner/gtoi-process-mail-queue-web:latest --tag ghcr.io/pkellner/gtoi-process-mail-queue-web:$RELEASEVERSION 
-          docker push ghcr.io/pkellner/gtoi-process-mail-queue-web --all-tags
+          docker build . --file Dockerfile --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
+          docker push ghcr.io/pkellner/testgo --all-tags
           

@@ -1,33 +1,23 @@
-#FROM node:alpine
+# Use the official Node.js image as a base
+FROM node:20
 
-# https://github.com/hirosystems/explorer/pull/582/commits/045e01f9405d5073a914f53e796dcb0bf66c39e2
-FROM node:18-alpine AS deps
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Define an ARG variable passed in as --build-arg
-ARG DATABASE_URL
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-# Use the ARG value in the environment variable (ARG is passed in to docker build command as --build-arg)
-# make sure that since this is GitHub Actions building, that it access the remote mysql database
-ENV DATABASE_URL=$DATABASE_URL
-
-# Create app directory
-RUN mkdir -p /usr/src
-WORKDIR /usr/src
-
-
-
-# Install app dependencies
-COPY package.json /usr/src/
-COPY package-lock.json /usr/src/
+# Install dependencies
 RUN npm install
 
-# Bundle app source
-COPY . /usr/src
+# Copy the rest of the application code to the working directory
+COPY . .
 
-# Run Prisma generate
-RUN npx prisma generate
-
+# Build the application
 RUN npm run build
+
+# Expose the port the app runs on
 EXPOSE 3000
 
+# Define the command to run the app
 CMD ["npm", "start"]

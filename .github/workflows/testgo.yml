@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
     defaults:
       run:
-        working-directory: my-turborepo/apps/web
+        working-directory: my-turborepo
     name: docker build if docker file changed
     steps:
       - uses: actions/checkout@v3
@@ -50,6 +50,6 @@ jobs:
           #
           echo "Docker testgo changed so building then pushing..."
           echo $GH_TOKEN | docker login ghcr.io -u $GH_USERNAME --password-stdin &
-          docker build . --file Dockerfile --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
+          docker build . --file app/web/Dockerfile --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
           docker push ghcr.io/pkellner/testgo --all-tags
           

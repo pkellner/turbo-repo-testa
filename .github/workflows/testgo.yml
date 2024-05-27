@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
     defaults:
       run:
-        working-directory: /turbo-repo-testa/my-turborepo/apps/web
+        working-directory: my-turborepo/apps/web
     name: docker build if docker file changed
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
         run: |
-          RELEASEVERSION=1.03
+          RELEASEVERSION=1.04
           # RELEASEVERSION=$(cat version.txt)
           # https://github.community/t/wanting-to-add-ßa-build-date-and-time-to-my-github-action/220185/6'
           #

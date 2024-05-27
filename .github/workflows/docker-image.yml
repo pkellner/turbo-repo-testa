@@ -48,8 +48,10 @@ jobs:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
         run: |
-          echo "Docker testgo changed so building then pushing..."
+          RELEASEVERSION=1.04
+          echo "Docker testgo building then pushing..."
           echo $GH_TOKEN | docker login ghcr.io -u $GH_USERNAME --password-stdin &
+          docker build . --file apps/web/Dockerfile  
           docker build . --file apps/web/Dockerfile --tag ghcr.io/pkellner/testgo:latest --tag ghcr.io/pkellner/testgo:$RELEASEVERSION 
           docker push ghcr.io/pkellner/testgo --all-tags
           

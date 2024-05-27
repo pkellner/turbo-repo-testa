@@ -42,12 +42,11 @@ jobs:
         run: npm run build 
 
       - name: Run step if any of the listed files above change    # UPDATE
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
         run: |
-          RELEASEVERSION=1.08
+          RELEASEVERSION=1.09
           #
           echo "Docker testgo changed so building then pushing..."
           echo $GH_TOKEN | docker login ghcr.io -u $GH_USERNAME --password-stdin &

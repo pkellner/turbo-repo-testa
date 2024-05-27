@@ -40,7 +40,7 @@ jobs:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           GH_USERNAME: ${{secrets.GH_USERNAME}}
         run: |
-          RELEASEVERSION=1.04
+          RELEASEVERSION=1.05
           # RELEASEVERSION=$(cat version.txt)
           # https://github.community/t/wanting-to-add-ßa-build-date-and-time-to-my-github-action/220185/6'
           #
